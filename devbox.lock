@@ -1,0 +1,101 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "bun@1.2.2": {
+      "last_modified": "2025-02-02T17:30:19Z",
+      "resolved": "github:NixOS/nixpkgs/8532db2a88ba56de9188af72134d93e39fd825f3#bun",
+      "source": "devbox-search",
+      "version": "1.2.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zfcpibckybddvxmc8l1z70644lmln9ql-bun-1.2.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zfcpibckybddvxmc8l1z70644lmln9ql-bun-1.2.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cq09szfdxdn3qyqbaazpax0kv8fkhf98-bun-1.2.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cq09szfdxdn3qyqbaazpax0kv8fkhf98-bun-1.2.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6jqpyqinhrm4wb4rdy73djs7k6wy870p-bun-1.2.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6jqpyqinhrm4wb4rdy73djs7k6wy870p-bun-1.2.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nx66dlvda541k1lpfy858whqzyfmbx5z-bun-1.2.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/nx66dlvda541k1lpfy858whqzyfmbx5z-bun-1.2.2"
+        }
+      }
+    },
+    "prisma@6.3.0": {
+      "last_modified": "2025-02-03T12:02:36Z",
+      "resolved": "github:NixOS/nixpkgs/c96875e768da1b176250c3bd0edce6b4f7b5d4bb#prisma",
+      "source": "devbox-search",
+      "version": "6.3.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1q50x9r8mzfnimlskdkl0sy21jny8ndr-prisma-6.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1q50x9r8mzfnimlskdkl0sy21jny8ndr-prisma-6.3.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cllp9iyk6wf8qxp6ajg07lfn40lxv1z8-prisma-6.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/cllp9iyk6wf8qxp6ajg07lfn40lxv1z8-prisma-6.3.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jm708kcrl918xzm6wyj8wnwjmrlp29vl-prisma-6.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/jm708kcrl918xzm6wyj8wnwjmrlp29vl-prisma-6.3.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6fsagjdj7dz5qwr7dqhrbpjlbn2cd4qi-prisma-6.3.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/6fsagjdj7dz5qwr7dqhrbpjlbn2cd4qi-prisma-6.3.0"
+        }
+      }
+    }
+  }
+}

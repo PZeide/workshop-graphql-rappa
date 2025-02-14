@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  comments Comment[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  lastUpdate  DateTime
+  comments    Comment[]
+}
+
+enum TaskState {
+  IN_PROGRESS
+  TODO
+}
+
+model Task {
+  id    Int       @id @default(autoincrement())
+  name  String    @unique
+  state TaskState
+}
+
+model Comment {
+  id        Int @id @default(autoincrement())
+  author    User @relation(fields: [authorId], references: [id])
+  authorId  Int
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  message   String
+}
