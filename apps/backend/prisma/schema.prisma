@@ -7,35 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
   password String
   comments Comment[]
+  role     UserRole
 }
 
 model Project {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
   description String
-  lastUpdate  DateTime
+  createdAt   DateTime
+  updatedAt   DateTime
   comments    Comment[]
+  tasks       Task[]
 }
 
 enum TaskState {
-  IN_PROGRESS
   TODO
+  IN_PROGRESS
+  DONE
 }
 
 model Task {
   id    Int       @id @default(autoincrement())
   name  String    @unique
   state TaskState
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
 }
 
 model Comment {
-  id        Int @id @default(autoincrement())
-  author    User @relation(fields: [authorId], references: [id])
+  id        Int     @id @default(autoincrement())
+  author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
   project   Project @relation(fields: [projectId], references: [id])
   projectId Int

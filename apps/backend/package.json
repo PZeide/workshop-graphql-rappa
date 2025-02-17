@@ -10,16 +10,20 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@apollo/server": "^4.11.3",
+    "@graphql-tools/resolvers-composition": "^7.0.13",
     "@prisma/client": "^6.3.0",
-    "elysia": "^1.2.12",
+    "argon2": "^0.41.1",
     "graphql": "^16.10.0",
-    "graphql-yoga": "^5.11.0"
+    "jose": "^5.9.6"
   },
   "devDependencies": {
     "@workshop-graphql-rappa/eslint-config": "workspace:^",
+    "@workshop-graphql-rappa/graphql-schema": "workspace:^",
     "@workshop-graphql-rappa/prettier-config": "workspace:^",
     "bun-types": "^1.2.2",
     "eslint": "^9.20.1",
+    "node-gyp": "^11.1.0",
     "prettier": "^3.5.1",
     "prisma": "^6.3.0"
   },

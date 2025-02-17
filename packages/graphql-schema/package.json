@@ -1,0 +1,16 @@
+{
+  "name": "@workshop-graphql-rappa/graphql-schema",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/typescript": "^4.1.3",
+    "@graphql-codegen/typescript-resolvers": "^4.4.2",
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "graphql-codegen": "bunx graphql-codegen --config ./codegen.ts"
+  }
+}

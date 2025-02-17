@@ -2,6 +2,10 @@
 
 ![Rappa](./assets/rappa_intro.gif)
 
-## Outils
+**Monorepo**
+
+## Structure du monorepo
 
 -
+
+![Rappa](./assets/rappa_mafemme.gif)
