@@ -2,56 +2,70 @@ import { ApolloServer } from "@apollo/server";
 import express from "express";
 import http from "http";
 import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import cors from "cors";
-import { schame as typeDefs } from "@workshop-graphql-rappa/graphql-schema";
-import { PrismaClient } from "@prisma/client";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { getUserFromRequest } from "./utils/token";
-import { authDirectiveTransformer } from "./directives/auth-directive";
-import { GraphQLDateTime } from "graphql-scalars";
-import { checkEnv } from "./utils/env";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/use/ws";
+import { validateEnvironment } from "./utils/env";
+import schema from "./schema";
+import context from "./context";
 
-import authenticationResolvers from "./resolvers/authentication";
-import projectResolvers from "./resolvers/projects";
-
-checkEnv();
-
-const scalarResolvers = {
-  DateTime: GraphQLDateTime,
-};
-
-const schema = authDirectiveTransformer(
-  makeExecutableSchema({
-    typeDefs,
-    resolvers: [scalarResolvers, authenticationResolvers, projectResolvers],
-  })
-);
+validateEnvironment();
 
 const app = express();
+const server = http.createServer(app);
 
-const prisma = new PrismaClient();
-
-const gqlServer = new ApolloServer<RappaContext>({
-  schema: authDirectiveTransformer(schema),
-  csrfPrevention: true,
+const wsServer = new WebSocketServer({
+  server,
+  path: "/",
 });
 
-await server.start();
+const wsServerCleanup = useServer({ schema }, wsServer);
+
+const gqlServer = new ApolloServer<RappaContext>({
+  schema: schema,
+  csrfPrevention: true,
+  plugins: [
+    // Proper shutdown for the HTTP server.
+    ApolloServerPluginDrainHttpServer({ httpServer: server }),
+
+    // Proper shutdown for the WebSocket server.
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await wsServerCleanup.dispose();
+          },
+        };
+      },
+    },
+  ],
+});
+
+await gqlServer.start();
 
 app.use(
-  "/graphql",
+  "/",
   cors<cors.CorsRequest>(),
   express.json(),
-  expressMiddleware(server, {
-    context: async ({ req }) => ({
-      prisma: prisma,
-      user: await getUserFromRequest(req, prisma),
-    }),
+  expressMiddleware(gqlServer, {
+    context: context,
   })
 );
 
-Bun.serve({
-  websocket: makeHa,
-});
+const host = import.meta.env.SERVER_HOST ?? "0.0.0.0";
+const port = import.meta.env.SERVER_PORT
+  ? parseInt(import.meta.env.SERVER_PORT)
+  : 4000;
 
-console.log(`🚀 Server ready at: ${url}`);
+await new Promise<void>((resolve) =>
+  server.listen(
+    {
+      host,
+      port,
+    },
+    resolve
+  )
+);
+
+console.log(`🚀 Server ready at: http://${host}:${port}`);

@@ -1,6 +1,6 @@
 import { getTokenSecret } from "./token";
 
-export function checkEnv() {
+export function validateEnvironment() {
   if (!import.meta.env.DATABASE_URL) {
     console.error("Missing DATABASE_URL environment variable!");
     process.exit(1);

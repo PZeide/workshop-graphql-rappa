@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { jwtVerify, SignJWT } from "jose";
-import { IncomingMessage } from "node:http";
+import express from "express";
 
 export function getTokenSecret(): string {
   if (!import.meta.env.TOKEN_SECRET) {
@@ -16,7 +16,7 @@ export function getEncodedTokenSecret(): Uint8Array {
 }
 
 export async function getUserFromRequest(
-  request: IncomingMessage,
+  request: express.Request,
   prisma: PrismaClient
 ): Promise<User | undefined> {
   const jwt = request.headers["authorization"];
