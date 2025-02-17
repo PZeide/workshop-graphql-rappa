@@ -15,18 +15,18 @@ export function isAuthorized(atLeast: GQLUserRole) {
 
   return ((next) => (root, args, context, info) => {
     if (!context.user) {
-      throw new GraphQLError("You can't do that!", {
+      throw new GraphQLError("Vous ne pouvez pas faire ça.", {
         extensions: {
-          code: "FORBIDDEN",
+          code: "CLIENT_FORBIDDEN",
         },
       });
     }
 
     const user = context.user;
     if (rolesScale[user.role] < rolesScale[atLeast]) {
-      throw new GraphQLError("You can't do that!", {
+      throw new GraphQLError("Vous ne pouvez pas faire ça.", {
         extensions: {
-          code: "FORBIDDEN",
+          code: "CLIENT_FORBIDDEN",
         },
       });
     }

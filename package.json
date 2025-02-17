@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "turbo dev --env-mode=loose",
     "lint": "turbo lint",
     "format": "turbo format",
     "graphql-codegen": "turbo graphql-codegen"

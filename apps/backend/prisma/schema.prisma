@@ -13,19 +13,22 @@ enum UserRole {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
+  id       String    @id @default(uuid())
   email    String    @unique
   password String
   comments Comment[]
+  projects Project[]
   role     UserRole
 }
 
 model Project {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   name        String    @unique
   description String
   createdAt   DateTime
   updatedAt   DateTime
+  owner       User      @relation(fields: [ownerId], references: [id])
+  ownerId     String
   comments    Comment[]
   tasks       Task[]
 }
@@ -37,18 +40,18 @@ enum TaskState {
 }
 
 model Task {
-  id    Int       @id @default(autoincrement())
-  name  String    @unique
-  state TaskState
-  project   Project @relation(fields: [projectId], references: [id])
-  projectId Int
+  id        String    @id @default(uuid())
+  name      String    @unique
+  state     TaskState
+  project   Project   @relation(fields: [projectId], references: [id])
+  projectId String
 }
 
 model Comment {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(uuid())
   author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String
   project   Project @relation(fields: [projectId], references: [id])
-  projectId Int
+  projectId String
   message   String
 }

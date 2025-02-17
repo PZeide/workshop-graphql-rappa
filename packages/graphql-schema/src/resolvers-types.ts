@@ -14,7 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
+  DateTime: { input: Date | string; output: Date | string; }
 };
 
 export type Comment = {
@@ -27,8 +27,14 @@ export type Comment = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createProject: Project;
   login: Scalars['String']['output'];
   signup: Scalars['String']['output'];
+};
+
+
+export type MutationCreateProjectArgs = {
+  project: ProjectInput;
 };
 
 
@@ -50,8 +56,14 @@ export type Project = {
   description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  slug: Scalars['String']['output'];
+  owner: User;
+  tasks: Array<Task>;
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ProjectInput = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -62,7 +74,7 @@ export type Query = {
 
 
 export type QueryProjectArgs = {
-  slug: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
 };
 
 export type Subscription = {
@@ -85,6 +97,7 @@ export type Task = {
   __typename?: 'Task';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  project: Project;
   state: TaskState;
 };
 
@@ -99,6 +112,7 @@ export type User = {
   comments: Array<Comment>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  projects: Array<Project>;
   role: UserRole;
 };
 
@@ -179,38 +193,40 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Comment: ResolverTypeWrapper<Comment>;
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']['output']>>;
+  Comment: ResolverTypeWrapper<Partial<Comment>>;
+  DateTime: ResolverTypeWrapper<Partial<Scalars['DateTime']['output']>>;
+  ID: ResolverTypeWrapper<Partial<Scalars['ID']['output']>>;
   Mutation: ResolverTypeWrapper<{}>;
-  Project: ResolverTypeWrapper<Project>;
+  Project: ResolverTypeWrapper<Partial<Project>>;
+  ProjectInput: ResolverTypeWrapper<Partial<ProjectInput>>;
   Query: ResolverTypeWrapper<{}>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
   Subscription: ResolverTypeWrapper<{}>;
-  Task: ResolverTypeWrapper<Task>;
-  TaskState: TaskState;
-  User: ResolverTypeWrapper<User>;
-  UserRole: UserRole;
+  Task: ResolverTypeWrapper<Partial<Task>>;
+  TaskState: ResolverTypeWrapper<Partial<TaskState>>;
+  User: ResolverTypeWrapper<Partial<User>>;
+  UserRole: ResolverTypeWrapper<Partial<UserRole>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Boolean: Scalars['Boolean']['output'];
-  Comment: Comment;
-  DateTime: Scalars['DateTime']['output'];
-  ID: Scalars['ID']['output'];
+  Boolean: Partial<Scalars['Boolean']['output']>;
+  Comment: Partial<Comment>;
+  DateTime: Partial<Scalars['DateTime']['output']>;
+  ID: Partial<Scalars['ID']['output']>;
   Mutation: {};
-  Project: Project;
+  Project: Partial<Project>;
+  ProjectInput: Partial<ProjectInput>;
   Query: {};
-  String: Scalars['String']['output'];
+  String: Partial<Scalars['String']['output']>;
   Subscription: {};
-  Task: Task;
-  User: User;
+  Task: Partial<Task>;
+  User: Partial<User>;
 }>;
 
 export type AuthDirectiveArgs = {
-  requires?: Maybe<UserRole>;
+  requires?: UserRole;
 };
 
 export type AuthDirectiveResolver<Result, Parent, ContextType = any, Args = AuthDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
@@ -228,6 +244,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'project'>>;
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   signup?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
 }>;
@@ -238,13 +255,14 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  slug?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  owner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  project?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryProjectArgs, 'slug'>>;
+  project?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>;
   projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
 }>;
 
@@ -256,6 +274,7 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  project?: Resolver<ResolversTypes['Project'], ParentType, ContextType>;
   state?: Resolver<ResolversTypes['TaskState'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -264,6 +283,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
   role?: Resolver<ResolversTypes['UserRole'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

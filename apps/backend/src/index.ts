@@ -1,39 +1,57 @@
 import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import express from "express";
+import http from "http";
+import { expressMiddleware } from "@apollo/server/express4";
+import cors from "cors";
 import { schame as typeDefs } from "@workshop-graphql-rappa/graphql-schema";
 import { PrismaClient } from "@prisma/client";
-import { getTokenSecret, getUserFromRequest } from "./authentication";
-import authenticationResolvers from "./graphql/authentication";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { getUserFromRequest } from "./utils/token";
+import { authDirectiveTransformer } from "./directives/auth-directive";
+import { GraphQLDateTime } from "graphql-scalars";
+import { checkEnv } from "./utils/env";
 
-if (!import.meta.env.DATABASE_URL) {
-  console.error("Missing DATABASE_URL environment variable!");
-  process.exit(1);
-}
+import authenticationResolvers from "./resolvers/authentication";
+import projectResolvers from "./resolvers/projects";
 
-if (!import.meta.env.TOKEN_SECRET) {
-  console.error("Missing TOKEN_SECRET environment variable!");
-  process.exit(1);
-}
+checkEnv();
 
-if (getTokenSecret().length < 64) {
-  console.warn(
-    "TOKEN_SECRET is insecure, use a token of at least 64 characters!"
-  );
-}
+const scalarResolvers = {
+  DateTime: GraphQLDateTime,
+};
 
-const server = new ApolloServer<RappaContext>({
-  typeDefs,
-  resolvers: [authenticationResolvers],
-});
+const schema = authDirectiveTransformer(
+  makeExecutableSchema({
+    typeDefs,
+    resolvers: [scalarResolvers, authenticationResolvers, projectResolvers],
+  })
+);
+
+const app = express();
 
 const prisma = new PrismaClient();
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req }) => ({
-    prisma: prisma,
-    user: await getUserFromRequest(req, prisma),
-  }),
+const gqlServer = new ApolloServer<RappaContext>({
+  schema: authDirectiveTransformer(schema),
+  csrfPrevention: true,
+});
+
+await server.start();
+
+app.use(
+  "/graphql",
+  cors<cors.CorsRequest>(),
+  express.json(),
+  expressMiddleware(server, {
+    context: async ({ req }) => ({
+      prisma: prisma,
+      user: await getUserFromRequest(req, prisma),
+    }),
+  })
+);
+
+Bun.serve({
+  websocket: makeHa,
 });
 
 console.log(`🚀 Server ready at: ${url}`);

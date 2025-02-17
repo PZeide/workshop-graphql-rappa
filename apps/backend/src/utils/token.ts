@@ -26,7 +26,13 @@ export async function getUserFromRequest(
   }
 
   const token = jwt.split("Bearer ", 2)[1];
-  const verified = await jwtVerify(token, getEncodedTokenSecret());
+  let verified;
+  try {
+    verified = await jwtVerify(token, getEncodedTokenSecret());
+  } catch {
+    return undefined;
+  }
+
   const userId = verified.payload.id;
 
   if (!userId) {
@@ -34,9 +40,7 @@ export async function getUserFromRequest(
   }
 
   const user = await prisma.user.findUnique({
-    where: {
-      email: userId.toString(),
-    },
+    where: { id: userId.toString() },
   });
 
   return user ?? undefined;

@@ -12,10 +12,18 @@
   "dependencies": {
     "@apollo/server": "^4.11.3",
     "@graphql-tools/resolvers-composition": "^7.0.13",
-    "@prisma/client": "^6.3.0",
+    "@graphql-tools/schema": "^10.0.18",
+    "@graphql-tools/utils": "^10.8.1",
+    "@prisma/client": "^6.3.1",
+    "apollo-server-express": "^3.13.0",
     "argon2": "^0.41.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "graphql": "^16.10.0",
-    "jose": "^5.9.6"
+    "graphql-scalars": "^1.24.1",
+    "graphql-ws": "^6.0.4",
+    "jose": "^5.9.6",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@workshop-graphql-rappa/eslint-config": "workspace:^",
@@ -25,7 +33,7 @@
     "eslint": "^9.20.1",
     "node-gyp": "^11.1.0",
     "prettier": "^3.5.1",
-    "prisma": "^6.3.0"
+    "prisma": "^6.3.1"
   },
   "module": "src/index.js"
 }
