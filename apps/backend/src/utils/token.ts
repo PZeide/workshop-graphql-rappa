@@ -1,6 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
 import { jwtVerify, SignJWT } from "jose";
-import http from "http";
 
 export function getTokenSecret(): string {
   if (!import.meta.env.TOKEN_SECRET) {

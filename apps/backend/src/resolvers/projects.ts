@@ -31,7 +31,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
   Mutation: {
     createProject: async (_parent, args, context) => {
       const existingProject = await context.prisma.project.findUnique({
-        where: { name: args.project.name },
+        where: { name: args.input.name },
       });
 
       if (existingProject) {
@@ -45,8 +45,8 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
       const now = new Date();
       const project = await context.prisma.project.create({
         data: {
-          name: args.project.name,
-          description: args.project.description,
+          name: args.input.name,
+          description: args.input.description,
           owner: { connect: context.user },
           updatedAt: now,
           createdAt: now,
@@ -128,7 +128,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
       subscribe: (_parent, _args, context) => {
         return context.pubsub.asyncIterableIterator(PROJECT_DELETED_EVENT);
       },
-      resolve: (payload: Project) => {
+      resolve: (payload: string) => {
         return payload;
       },
     },

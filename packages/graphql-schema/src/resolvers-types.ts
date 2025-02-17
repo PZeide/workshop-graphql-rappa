@@ -25,22 +25,64 @@ export type Comment = {
   project: Project;
 };
 
+export type CreateCommentInput = {
+  message: Scalars['String']['input'];
+};
+
+export type CreateProjectInput = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type CreateTaskInput = {
+  name: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createComment: Comment;
   createProject: Project;
+  createTask: Task;
+  deleteComment: Scalars['Boolean']['output'];
   deleteProject: Scalars['Boolean']['output'];
+  deleteTask: Scalars['Boolean']['output'];
   login: Scalars['String']['output'];
   signup: Scalars['String']['output'];
+  updateComment: Comment;
+  updateProject: Project;
+  updateTask: Task;
+};
+
+
+export type MutationCreateCommentArgs = {
+  input: CreateCommentInput;
+  project: Scalars['ID']['input'];
 };
 
 
 export type MutationCreateProjectArgs = {
-  project: ProjectInput;
+  input: CreateProjectInput;
+};
+
+
+export type MutationCreateTaskArgs = {
+  input: CreateTaskInput;
+  project: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationDeleteProjectArgs = {
   project: Scalars['ID']['input'];
+};
+
+
+export type MutationDeleteTaskArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -55,6 +97,24 @@ export type MutationSignupArgs = {
   password: Scalars['String']['input'];
 };
 
+
+export type MutationUpdateCommentArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdateCommentInput;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  input: UpdateProjectInput;
+  project: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateTaskArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdateTaskInput;
+};
+
 export type Project = {
   __typename?: 'Project';
   comments: Array<Comment>;
@@ -65,11 +125,6 @@ export type Project = {
   owner: User;
   tasks: Array<Task>;
   updatedAt: Scalars['DateTime']['output'];
-};
-
-export type ProjectInput = {
-  description: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -86,19 +141,44 @@ export type QueryProjectArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   commentAdded: Comment;
+  commentDeleted: Scalars['ID']['output'];
+  commentUpdated: Comment;
   projectAdded: Project;
   projectDeleted: Scalars['ID']['output'];
+  projectUpdated: Project;
   taskAdded: Task;
+  taskDeleted: Scalars['ID']['output'];
+  taskUpdated: Task;
 };
 
 
 export type SubscriptionCommentAddedArgs = {
-  projectSlug: Scalars['String']['input'];
+  project: Scalars['ID']['input'];
+};
+
+
+export type SubscriptionCommentDeletedArgs = {
+  project: Scalars['ID']['input'];
+};
+
+
+export type SubscriptionCommentUpdatedArgs = {
+  project: Scalars['ID']['input'];
 };
 
 
 export type SubscriptionTaskAddedArgs = {
-  projectSlug: Scalars['String']['input'];
+  project: Scalars['ID']['input'];
+};
+
+
+export type SubscriptionTaskDeletedArgs = {
+  project: Scalars['ID']['input'];
+};
+
+
+export type SubscriptionTaskUpdatedArgs = {
+  project: Scalars['ID']['input'];
 };
 
 export type Task = {
@@ -114,6 +194,20 @@ export enum TaskState {
   InProgress = 'IN_PROGRESS',
   Todo = 'TODO'
 }
+
+export type UpdateCommentInput = {
+  message?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateProjectInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateTaskInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<TaskState>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -203,16 +297,21 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']['output']>>;
   Comment: ResolverTypeWrapper<Partial<Comment>>;
+  CreateCommentInput: ResolverTypeWrapper<Partial<CreateCommentInput>>;
+  CreateProjectInput: ResolverTypeWrapper<Partial<CreateProjectInput>>;
+  CreateTaskInput: ResolverTypeWrapper<Partial<CreateTaskInput>>;
   DateTime: ResolverTypeWrapper<Partial<Scalars['DateTime']['output']>>;
   ID: ResolverTypeWrapper<Partial<Scalars['ID']['output']>>;
   Mutation: ResolverTypeWrapper<{}>;
   Project: ResolverTypeWrapper<Partial<Project>>;
-  ProjectInput: ResolverTypeWrapper<Partial<ProjectInput>>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
   Subscription: ResolverTypeWrapper<{}>;
   Task: ResolverTypeWrapper<Partial<Task>>;
   TaskState: ResolverTypeWrapper<Partial<TaskState>>;
+  UpdateCommentInput: ResolverTypeWrapper<Partial<UpdateCommentInput>>;
+  UpdateProjectInput: ResolverTypeWrapper<Partial<UpdateProjectInput>>;
+  UpdateTaskInput: ResolverTypeWrapper<Partial<UpdateTaskInput>>;
   User: ResolverTypeWrapper<Partial<User>>;
   UserRole: ResolverTypeWrapper<Partial<UserRole>>;
 }>;
@@ -221,15 +320,20 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Partial<Scalars['Boolean']['output']>;
   Comment: Partial<Comment>;
+  CreateCommentInput: Partial<CreateCommentInput>;
+  CreateProjectInput: Partial<CreateProjectInput>;
+  CreateTaskInput: Partial<CreateTaskInput>;
   DateTime: Partial<Scalars['DateTime']['output']>;
   ID: Partial<Scalars['ID']['output']>;
   Mutation: {};
   Project: Partial<Project>;
-  ProjectInput: Partial<ProjectInput>;
   Query: {};
   String: Partial<Scalars['String']['output']>;
   Subscription: {};
   Task: Partial<Task>;
+  UpdateCommentInput: Partial<UpdateCommentInput>;
+  UpdateProjectInput: Partial<UpdateProjectInput>;
+  UpdateTaskInput: Partial<UpdateTaskInput>;
   User: Partial<User>;
 }>;
 
@@ -252,10 +356,17 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'project'>>;
+  createComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationCreateCommentArgs, 'input' | 'project'>>;
+  createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'input'>>;
+  createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'input' | 'project'>>;
+  deleteComment?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteCommentArgs, 'id'>>;
   deleteProject?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'project'>>;
+  deleteTask?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   signup?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
+  updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'id' | 'input'>>;
+  updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'input' | 'project'>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'id' | 'input'>>;
 }>;
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = ResolversObject<{
@@ -276,10 +387,15 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
-  commentAdded?: SubscriptionResolver<ResolversTypes['Comment'], "commentAdded", ParentType, ContextType, RequireFields<SubscriptionCommentAddedArgs, 'projectSlug'>>;
+  commentAdded?: SubscriptionResolver<ResolversTypes['Comment'], "commentAdded", ParentType, ContextType, RequireFields<SubscriptionCommentAddedArgs, 'project'>>;
+  commentDeleted?: SubscriptionResolver<ResolversTypes['ID'], "commentDeleted", ParentType, ContextType, RequireFields<SubscriptionCommentDeletedArgs, 'project'>>;
+  commentUpdated?: SubscriptionResolver<ResolversTypes['Comment'], "commentUpdated", ParentType, ContextType, RequireFields<SubscriptionCommentUpdatedArgs, 'project'>>;
   projectAdded?: SubscriptionResolver<ResolversTypes['Project'], "projectAdded", ParentType, ContextType>;
   projectDeleted?: SubscriptionResolver<ResolversTypes['ID'], "projectDeleted", ParentType, ContextType>;
-  taskAdded?: SubscriptionResolver<ResolversTypes['Task'], "taskAdded", ParentType, ContextType, RequireFields<SubscriptionTaskAddedArgs, 'projectSlug'>>;
+  projectUpdated?: SubscriptionResolver<ResolversTypes['Project'], "projectUpdated", ParentType, ContextType>;
+  taskAdded?: SubscriptionResolver<ResolversTypes['Task'], "taskAdded", ParentType, ContextType, RequireFields<SubscriptionTaskAddedArgs, 'project'>>;
+  taskDeleted?: SubscriptionResolver<ResolversTypes['ID'], "taskDeleted", ParentType, ContextType, RequireFields<SubscriptionTaskDeletedArgs, 'project'>>;
+  taskUpdated?: SubscriptionResolver<ResolversTypes['Task'], "taskUpdated", ParentType, ContextType, RequireFields<SubscriptionTaskUpdatedArgs, 'project'>>;
 }>;
 
 export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = ResolversObject<{
