@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { jwtVerify, SignJWT } from "jose";
-import express from "express";
+import http from "http";
 
 export function getTokenSecret(): string {
   if (!import.meta.env.TOKEN_SECRET) {
@@ -15,12 +15,10 @@ export function getEncodedTokenSecret(): Uint8Array {
   return encoder.encode(getTokenSecret());
 }
 
-export async function getUserFromRequest(
-  request: express.Request,
+export async function getUserFromJwt(
+  jwt: string | undefined,
   prisma: PrismaClient
 ): Promise<User | undefined> {
-  const jwt = request.headers["authorization"];
-
   if (!jwt || !jwt.startsWith("Bearer ")) {
     return undefined;
   }
@@ -56,6 +54,6 @@ export async function generateToken(user: User): Promise<string> {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("5m")
+    .setExpirationTime("1h")
     .sign(getEncodedTokenSecret());
 }

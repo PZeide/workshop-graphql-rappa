@@ -75,7 +75,7 @@ type Mutation {
 
 type Subscription {
   projectAdded: Project! @auth(requires: USER)
-  projectDeleted: Project! @auth(requires: USER)
+  projectDeleted: ID! @auth(requires: USER)
 
   commentAdded(projectSlug: String!): Comment! @auth(requires: USER)
   taskAdded(projectSlug: String!): Task! @auth(requires: USER)

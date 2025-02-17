@@ -29,5 +29,28 @@ export function authDirectiveTransformer(schema: GraphQLSchema): GraphQLSchema {
       fieldConfig.resolve = composable;
       return fieldConfig;
     },
+
+    [MapperKind.SUBSCRIPTION_ROOT_FIELD]: (fieldConfig) => {
+      const directives = getDirective(schema, fieldConfig, DIRECTIVE_NAME);
+      if (!directives) {
+        return undefined;
+      }
+
+      if (directives.length > 1) {
+        throw new Error(
+          "Cannot handle more than one auth directive on a single field!"
+        );
+      }
+
+      const authDirective: AuthDirectiveArgs = directives[0];
+      if (!authDirective || !authDirective.requires) {
+        return undefined;
+      }
+
+      const { subscribe = defaultFieldResolver } = fieldConfig;
+      const composable = isAuthorized(authDirective.requires)(subscribe);
+      fieldConfig.subscribe = composable;
+      return fieldConfig;
+    },
   });
 }

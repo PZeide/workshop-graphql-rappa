@@ -87,7 +87,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   commentAdded: Comment;
   projectAdded: Project;
-  projectDeleted: Project;
+  projectDeleted: Scalars['ID']['output'];
   taskAdded: Task;
 };
 
@@ -278,7 +278,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
   commentAdded?: SubscriptionResolver<ResolversTypes['Comment'], "commentAdded", ParentType, ContextType, RequireFields<SubscriptionCommentAddedArgs, 'projectSlug'>>;
   projectAdded?: SubscriptionResolver<ResolversTypes['Project'], "projectAdded", ParentType, ContextType>;
-  projectDeleted?: SubscriptionResolver<ResolversTypes['Project'], "projectDeleted", ParentType, ContextType>;
+  projectDeleted?: SubscriptionResolver<ResolversTypes['ID'], "projectDeleted", ParentType, ContextType>;
   taskAdded?: SubscriptionResolver<ResolversTypes['Task'], "taskAdded", ParentType, ContextType, RequireFields<SubscriptionTaskAddedArgs, 'projectSlug'>>;
 }>;
 

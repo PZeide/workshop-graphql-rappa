@@ -1,6 +1,9 @@
-import { Resolvers } from "@workshop-graphql-rappa/graphql-schema";
+import { Project, Resolvers } from "@workshop-graphql-rappa/graphql-schema";
 import { GraphQLError } from "graphql";
 import { toGQLUser } from "../utils/mapping";
+
+const PROJECT_ADDED_EVENT = "projectAdded";
+const PROJECT_DELETED_EVENT = "projectDeleted";
 
 const resolvers: Partial<Resolvers<RappaContext>> = {
   Query: {
@@ -50,6 +53,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         },
       });
 
+      context.pubsub.publish(PROJECT_ADDED_EVENT, project);
       return project;
     },
 
@@ -66,10 +70,23 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         });
       }
 
+      // Deny deletion if user is not admin and it's not his project
+      if (
+        context.user?.role != "ADMIN" &&
+        context.user?.id != project.ownerId
+      ) {
+        throw new GraphQLError("Vous ne pouvez pas faire ça.", {
+          extensions: {
+            code: "CLIENT_FORBIDDEN",
+          },
+        });
+      }
+
       await context.prisma.project.delete({
         where: { id: project.id },
       });
 
+      context.pubsub.publish(PROJECT_DELETED_EVENT, project.id);
       return true;
     },
   },
@@ -97,7 +114,25 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
     },
   },
 
-  Subscription: {},
+  Subscription: {
+    projectAdded: {
+      subscribe: (_parent, _args, context) => {
+        return context.pubsub.asyncIterableIterator(PROJECT_ADDED_EVENT);
+      },
+      resolve: (payload: Project) => {
+        return payload;
+      },
+    },
+
+    projectDeleted: {
+      subscribe: (_parent, _args, context) => {
+        return context.pubsub.asyncIterableIterator(PROJECT_DELETED_EVENT);
+      },
+      resolve: (payload: Project) => {
+        return payload;
+      },
+    },
+  },
 };
 
 export default resolvers;

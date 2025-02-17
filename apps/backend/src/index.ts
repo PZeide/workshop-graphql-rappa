@@ -8,7 +8,7 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { validateEnvironment } from "./utils/env";
 import schema from "./schema";
-import context from "./context";
+import { contextFromConnectionParams, contextFromRequest } from "./context";
 
 validateEnvironment();
 
@@ -20,7 +20,14 @@ const wsServer = new WebSocketServer({
   path: "/",
 });
 
-const wsServerCleanup = useServer({ schema }, wsServer);
+const wsServerCleanup = useServer(
+  {
+    schema,
+    context: ({ connectionParams }) =>
+      contextFromConnectionParams(connectionParams ?? {}),
+  },
+  wsServer
+);
 
 const gqlServer = new ApolloServer<RappaContext>({
   schema: schema,
@@ -49,7 +56,7 @@ app.use(
   cors<cors.CorsRequest>(),
   express.json(),
   expressMiddleware(gqlServer, {
-    context: context,
+    context: ({ req }) => contextFromRequest(req),
   })
 );
 
@@ -58,14 +65,13 @@ const port = import.meta.env.SERVER_PORT
   ? parseInt(import.meta.env.SERVER_PORT)
   : 4000;
 
-await new Promise<void>((resolve) =>
-  server.listen(
-    {
-      host,
-      port,
-    },
-    resolve
-  )
+server.listen(
+  {
+    host,
+    port,
+  },
+  () => {
+    console.log(`🚀 Server ready at http://${host}:${port}`);
+    console.log(`📅 Subscriptions ready at http://${host}:${port}`);
+  }
 );
-
-console.log(`🚀 Server ready at: http://${host}:${port}`);
