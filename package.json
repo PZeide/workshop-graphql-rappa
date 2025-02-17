@@ -9,7 +9,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "turbo format"
+    "format": "turbo format",
+    "graphql-codegen": "turbo graphql-codegen"
   },
   "workspaces": [
     "apps/*",

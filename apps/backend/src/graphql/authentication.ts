@@ -1,4 +1,3 @@
-import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { Resolvers } from "@workshop-graphql-rappa/graphql-schema";
 import * as argon2 from "argon2";
 import { GraphQLError } from "graphql";
@@ -7,11 +6,33 @@ import { generateToken } from "../authentication";
 const resolvers: Partial<Resolvers<RappaContext>> = {
   Mutation: {
     signup: async (_, args, context) => {
-      const user = await context.prisma.user.findUnique({
+      const existingUser = await context.prisma.user.findUnique({
         where: {
-          email: args.login,
+          email: args.email,
         },
       });
+
+      if (existingUser) {
+        throw new GraphQLError(
+          "User already exists with a similar mail address",
+          {
+            extensions: {
+              code: "USER_ALREADY_EXISTS",
+            },
+          }
+        );
+      }
+
+      const passwordHash = await argon2.hash(args.password);
+      const user = await context.prisma.user.create({
+        data: {
+          email: args.email,
+          password: passwordHash,
+          role: "ADMIN",
+        },
+      });
+
+      return await generateToken(user);
     },
 
     login: async (_, args, context) => {
@@ -49,4 +70,4 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
   },
 };
 
-export default composeResolvers();
+export default resolvers;

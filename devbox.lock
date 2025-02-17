@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "bun@1.2.2": {
-      "last_modified": "2025-02-02T17:30:19Z",
-      "resolved": "github:NixOS/nixpkgs/8532db2a88ba56de9188af72134d93e39fd825f3#bun",
+      "last_modified": "2025-02-07T11:26:36Z",
+      "resolved": "github:NixOS/nixpkgs/d98abf5cf5914e5e4e9d57205e3af55ca90ffc1d#bun",
       "source": "devbox-search",
       "version": "1.2.2",
       "systems": {
@@ -11,21 +11,21 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/zfcpibckybddvxmc8l1z70644lmln9ql-bun-1.2.2",
+              "path": "/nix/store/vgxf4h6n4g6i79bvl7i59vnm2acx5h4l-bun-1.2.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/zfcpibckybddvxmc8l1z70644lmln9ql-bun-1.2.2"
+          "store_path": "/nix/store/vgxf4h6n4g6i79bvl7i59vnm2acx5h4l-bun-1.2.2"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/cq09szfdxdn3qyqbaazpax0kv8fkhf98-bun-1.2.2",
+              "path": "/nix/store/12pmq4z1c04jpd322cjqvla0900c9s26-bun-1.2.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/cq09szfdxdn3qyqbaazpax0kv8fkhf98-bun-1.2.2"
+          "store_path": "/nix/store/12pmq4z1c04jpd322cjqvla0900c9s26-bun-1.2.2"
         },
         "x86_64-darwin": {
           "outputs": [
@@ -41,11 +41,11 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/nx66dlvda541k1lpfy858whqzyfmbx5z-bun-1.2.2",
+              "path": "/nix/store/zfgpjg2j3v1sfl37kd00ahjmsbh2aybj-bun-1.2.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/nx66dlvda541k1lpfy858whqzyfmbx5z-bun-1.2.2"
+          "store_path": "/nix/store/zfgpjg2j3v1sfl37kd00ahjmsbh2aybj-bun-1.2.2"
         }
       }
     },
@@ -178,6 +178,21 @@
             }
           ],
           "store_path": "/nix/store/6fsagjdj7dz5qwr7dqhrbpjlbn2cd4qi-prisma-6.3.0"
+        }
+      }
+    },
+    "stdenv.cc.cc.lib": {
+      "resolved": "github:NixOS/nixpkgs/75a52265bda7fd25e06e3a67dee3f0354e73243c#stdenv.cc.cc.lib",
+      "source": "nixpkg",
+      "systems": {
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "lib",
+              "path": "/nix/store/9fy9zzhf613xp0c3jsjxbjq6yp8afrsv-gcc-12.3.0-lib",
+              "default": true
+            }
+          ]
         }
       }
     }

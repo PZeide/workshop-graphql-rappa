@@ -43,7 +43,13 @@ export async function getUserFromRequest(
 }
 
 export async function generateToken(user: User): Promise<string> {
-  return await new SignJWT({ id: user.id })
+  const payload = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  };
+
+  return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("5m")

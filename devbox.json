@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.7/.schema/devbox.schema.json",
-  "packages": ["gcc@14.2.0", "bun@1.2.2", "prisma@6.3.0"],
+  "packages": ["gcc@14.2.0", "bun@1.2.2", "prisma@6.3.0", "stdenv.cc.cc.lib"],
   "shell": {
     "scripts": {
       "dev": ["bun dev"]

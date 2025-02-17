@@ -3,6 +3,7 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { schame as typeDefs } from "@workshop-graphql-rappa/graphql-schema";
 import { PrismaClient } from "@prisma/client";
 import { getTokenSecret, getUserFromRequest } from "./authentication";
+import authenticationResolvers from "./graphql/authentication";
 
 if (!import.meta.env.DATABASE_URL) {
   console.error("Missing DATABASE_URL environment variable!");
@@ -22,7 +23,7 @@ if (getTokenSecret().length < 64) {
 
 const server = new ApolloServer<RappaContext>({
   typeDefs,
-  resolvers: [],
+  resolvers: [authenticationResolvers],
 });
 
 const prisma = new PrismaClient();

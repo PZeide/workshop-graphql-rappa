@@ -28,7 +28,6 @@ export type Comment = {
 export type Mutation = {
   __typename?: 'Mutation';
   login: Scalars['String']['output'];
-  logout: Scalars['Boolean']['output'];
   signup: Scalars['String']['output'];
 };
 
@@ -40,7 +39,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationSignupArgs = {
-  login: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
@@ -230,8 +229,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
-  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  signup?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'login' | 'password'>>;
+  signup?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
 }>;
 
 export type ProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['Project'] = ResolversParentTypes['Project']> = ResolversObject<{
