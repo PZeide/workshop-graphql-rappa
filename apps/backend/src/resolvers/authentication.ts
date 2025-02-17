@@ -26,7 +26,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         data: {
           email: args.email,
           password: passwordHash,
-          role: "ADMIN",
+          role: "USER",
         },
       });
 

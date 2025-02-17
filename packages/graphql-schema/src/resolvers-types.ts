@@ -28,6 +28,7 @@ export type Comment = {
 export type Mutation = {
   __typename?: 'Mutation';
   createProject: Project;
+  deleteProject: Scalars['Boolean']['output'];
   login: Scalars['String']['output'];
   signup: Scalars['String']['output'];
 };
@@ -35,6 +36,11 @@ export type Mutation = {
 
 export type MutationCreateProjectArgs = {
   project: ProjectInput;
+};
+
+
+export type MutationDeleteProjectArgs = {
+  project: Scalars['ID']['input'];
 };
 
 
@@ -80,6 +86,8 @@ export type QueryProjectArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   commentAdded: Comment;
+  projectAdded: Project;
+  projectDeleted: Project;
   taskAdded: Task;
 };
 
@@ -245,6 +253,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   createProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationCreateProjectArgs, 'project'>>;
+  deleteProject?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteProjectArgs, 'project'>>;
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   signup?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
 }>;
@@ -268,6 +277,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
   commentAdded?: SubscriptionResolver<ResolversTypes['Comment'], "commentAdded", ParentType, ContextType, RequireFields<SubscriptionCommentAddedArgs, 'projectSlug'>>;
+  projectAdded?: SubscriptionResolver<ResolversTypes['Project'], "projectAdded", ParentType, ContextType>;
+  projectDeleted?: SubscriptionResolver<ResolversTypes['Project'], "projectDeleted", ParentType, ContextType>;
   taskAdded?: SubscriptionResolver<ResolversTypes['Task'], "taskAdded", ParentType, ContextType, RequireFields<SubscriptionTaskAddedArgs, 'projectSlug'>>;
 }>;
 

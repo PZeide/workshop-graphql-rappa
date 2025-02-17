@@ -27,14 +27,6 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
 
   Mutation: {
     createProject: async (_parent, args, context) => {
-      if (!context.user) {
-        throw new GraphQLError("Une erreur serveur est survenue.", {
-          extensions: {
-            code: "SERVER_MISSING_USER_CONTEXT",
-          },
-        });
-      }
-
       const existingProject = await context.prisma.project.findUnique({
         where: { name: args.project.name },
       });
@@ -59,6 +51,26 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
       });
 
       return project;
+    },
+
+    deleteProject: async (_parent, args, context) => {
+      const project = await context.prisma.project.findUnique({
+        where: { id: args.project },
+      });
+
+      if (!project) {
+        throw new GraphQLError("Ce projet n'existe pas.", {
+          extensions: {
+            code: "CLIENT_PROJECT_MISSING",
+          },
+        });
+      }
+
+      await context.prisma.project.delete({
+        where: { id: project.id },
+      });
+
+      return true;
     },
   },
 

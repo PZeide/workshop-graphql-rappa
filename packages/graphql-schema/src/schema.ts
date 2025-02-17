@@ -70,10 +70,13 @@ type Mutation {
   login(email: String!, password: String!): String!
 
   createProject(project: ProjectInput!): Project! @auth(requires: USER)
+  deleteProject(project: ID!): Boolean! @auth(requires: ADMIN)
 }
 
 type Subscription {
-  # Subscription for CREATION / DELETION / UPDATE
+  projectAdded: Project! @auth(requires: USER)
+  projectDeleted: Project! @auth(requires: USER)
+
   commentAdded(projectSlug: String!): Comment! @auth(requires: USER)
   taskAdded(projectSlug: String!): Task! @auth(requires: USER)
 }
