@@ -1,7 +1,6 @@
 import { Project, Resolvers } from "@workshop-graphql-rappa/graphql-schema";
 import { GraphQLError } from "graphql";
-import { toGQLUser } from "../utils/mapping";
-import { isAdminOrOwner } from "./utils";
+import { isAdminOrOwner, toGQLTask, toGQLUser } from "./utils";
 
 const PROJECT_ADDED_EVENT = "projectAdded";
 const PROJECT_UPDATED_EVENT = "projectUpdated";
@@ -99,11 +98,13 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         }
       }
 
+      const now = new Date();
       const updatedProject = await context.prisma.project.update({
         where: { id: project.id },
         data: {
           name: args.input.name ?? undefined,
           description: args.input.description ?? undefined,
+          updatedAt: now,
         },
       });
 
@@ -146,9 +147,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
     owner: async (parent, _args, context) => {
       const user = await context.prisma.project
         .findUnique({
-          where: {
-            id: parent.id,
-          },
+          where: { id: parent.id },
         })
         .owner();
 
@@ -156,12 +155,50 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         throw new GraphQLError("Une erreur serveur est survenue.", {
           extensions: {
             code: "SERVER_RELATION_ERROR",
-            at: `Projet(id = ${parent.id})`,
+            at: `Projet(id = ${parent.id}).owner`,
           },
         });
       }
 
       return toGQLUser(user);
+    },
+
+    comments: async (parent, _args, context) => {
+      const comments = await context.prisma.project
+        .findUnique({
+          where: { id: parent.id },
+        })
+        .comments();
+
+      if (!comments) {
+        throw new GraphQLError("Une erreur serveur est survenue.", {
+          extensions: {
+            code: "SERVER_RELATION_ERROR",
+            at: `Projet(id = ${parent.id}).comments`,
+          },
+        });
+      }
+
+      return comments;
+    },
+
+    tasks: async (parent, _args, context) => {
+      const tasks = await context.prisma.project
+        .findUnique({
+          where: { id: parent.id },
+        })
+        .tasks();
+
+      if (!tasks) {
+        throw new GraphQLError("Une erreur serveur est survenue.", {
+          extensions: {
+            code: "SERVER_RELATION_ERROR",
+            at: `Projet(id = ${parent.id}).tasks`,
+          },
+        });
+      }
+
+      return tasks.map(toGQLTask);
     },
   },
 

@@ -91,11 +91,11 @@ type Mutation {
   deleteProject(project: ID!): Boolean! @auth(requires: USER)
 
   createTask(project: ID!, input: CreateTaskInput!): Task! @auth(requires: USER)
-  updateTask(id: ID!, input: UpdateTaskInput!): Task! @auth(requires: USER)
-  deleteTask(id: ID!): Boolean! @auth(requires: USER)
+  updateTask(task: ID!, input: UpdateTaskInput!): Task! @auth(requires: USER)
+  deleteTask(task: ID!): Boolean! @auth(requires: ADMIN)
 
   createComment(project: ID!, input: CreateCommentInput!): Comment! @auth(requires: USER)
-  deleteComment(id: ID!): Boolean! @auth(requires: USER)
+  deleteComment(comment: ID!): Boolean! @auth(requires: USER)
 }
 
 type Subscription {
