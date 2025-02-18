@@ -1,6 +1,6 @@
 import { Resolvers } from "@workshop-graphql-rappa/graphql-schema";
 import { GraphQLError } from "graphql";
-import { toGQLUser } from "./utils";
+import { isAdminOrOwner, toGQLUser } from "./utils";
 import { Comment } from "@prisma/client";
 
 const COMMENT_ADDED_EVENT = (id: string) => `commentAdded@${id}`;
@@ -42,6 +42,14 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         throw new GraphQLError("Ce commentaire n'existe pas.", {
           extensions: {
             code: "CLIENT_COMMENT_MISSING",
+          },
+        });
+      }
+
+      if (!context.user || !isAdminOrOwner(context.user, comment.authorId)) {
+        throw new GraphQLError("Vous ne pouvez pas faire ça.", {
+          extensions: {
+            code: "CLIENT_FORBIDDEN",
           },
         });
       }
