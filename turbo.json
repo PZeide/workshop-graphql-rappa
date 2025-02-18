@@ -19,6 +19,14 @@
     },
     "graphql-codegen": {
       "dependsOn": ["^graphql-codegen"]
+    },
+    "seed": {
+      "cache": false,
+      "dependsOn": ["^seed"]
+    },
+    "migrate": {
+      "cache": false,
+      "dependsOn": ["^migrate"]
     }
   }
 }

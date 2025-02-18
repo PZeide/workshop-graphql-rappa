@@ -15,7 +15,7 @@ export const GET_PROJECTS = gql(`
 `);
 
 export const GET_PROJECT = gql(`
-  query GetProject($id: ID!) {
+  query GetProject($id: ID!, $taskFilters: TaskFilters) {
     project(id: $id) {
       id
       name
@@ -32,7 +32,7 @@ export const GET_PROJECT = gql(`
           email
         }
       }
-      tasks {
+      tasks(filters: $taskFilters) {
         id
         name
         state

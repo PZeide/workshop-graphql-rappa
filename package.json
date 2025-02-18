@@ -10,7 +10,9 @@
     "dev": "turbo dev --env-mode=loose",
     "lint": "turbo lint",
     "format": "turbo format",
-    "graphql-codegen": "turbo graphql-codegen"
+    "graphql-codegen": "turbo graphql-codegen",
+    "seed": "turbo seed",
+    "migrate": "turbo migrate"
   },
   "workspaces": [
     "apps/*",

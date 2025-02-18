@@ -120,6 +120,11 @@ export type Project = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+
+export type ProjectTasksArgs = {
+  filters?: InputMaybe<TaskFilters>;
+};
+
 export type ProjectFilters = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -185,6 +190,10 @@ export type Task = {
   name: Scalars['String']['output'];
   project: Project;
   state: TaskState;
+};
+
+export type TaskFilters = {
+  state?: InputMaybe<TaskState>;
 };
 
 export enum TaskState {
@@ -303,6 +312,7 @@ export type ResolversTypes = ResolversObject<{
   String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
   Subscription: ResolverTypeWrapper<{}>;
   Task: ResolverTypeWrapper<Partial<Task>>;
+  TaskFilters: ResolverTypeWrapper<Partial<TaskFilters>>;
   TaskState: ResolverTypeWrapper<Partial<TaskState>>;
   UpdateProjectInput: ResolverTypeWrapper<Partial<UpdateProjectInput>>;
   UpdateTaskInput: ResolverTypeWrapper<Partial<UpdateTaskInput>>;
@@ -327,6 +337,7 @@ export type ResolversParentTypes = ResolversObject<{
   String: Partial<Scalars['String']['output']>;
   Subscription: {};
   Task: Partial<Task>;
+  TaskFilters: Partial<TaskFilters>;
   UpdateProjectInput: Partial<UpdateProjectInput>;
   UpdateTaskInput: Partial<UpdateTaskInput>;
   User: Partial<User>;
@@ -370,7 +381,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   owner?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType>;
+  tasks?: Resolver<Array<ResolversTypes['Task']>, ParentType, ContextType, Partial<ProjectTasksArgs>>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

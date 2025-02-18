@@ -1,5 +1,4 @@
 import { TaskState, UserRole } from "@workshop-graphql-rappa/graphql-schema";
-import { GetProjectQuery } from "@workshop-graphql-rappa/graphql-schema/src/client/graphql";
 import { Circle, Clock, CheckCircle2, Trash } from "lucide-react";
 import { useState } from "react";
 import { deleteTask, updateTask } from "../services/api";

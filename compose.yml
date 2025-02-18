@@ -1,25 +1,4 @@
 services:
-  database:
-    image: postgres:17
-    restart: unless-stopped
-    container_name: rappa-database
-    environment:
-      POSTGRES_USER: dev-user
-      POSTGRES_PASSWORD: dev-password
-      POSTGRES_DB: dev-database
-    volumes:
-      - rappa-postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: "pg_isready -q -d dev-database -U dev-user"
-      interval: 30s
-      timeout: 10s
-      retries: 100
-      start_period: 40s
-    ports:
-      - "5432:5432"
-    networks:
-      - rappa-dev
-
   turbo:
     image: oven/bun:1.2.2
     restart: unless-stopped
@@ -31,10 +10,3 @@ services:
     ports:
       - "5173:5173"
       - "4000:4000"
-    networks:
-      - rappa-dev
-
-networks:
-  rappa-dev:
-volumes:
-  rappa-postgres-data:

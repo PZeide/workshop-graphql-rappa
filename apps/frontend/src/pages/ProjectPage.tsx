@@ -23,6 +23,9 @@ import { deleteProject } from "../services/api";
 import { extractErrorMessage } from "../utils/error";
 import CreateCommentModal from "../components/modals/CreateCommentModal";
 import CreateTaskModal from "../components/modals/CreateTaskModal";
+import { TaskState } from "@workshop-graphql-rappa/graphql-schema";
+
+type FilterOptions = TaskState | "NO_FILTER";
 
 const ProjectPage = () => {
   const { projectId } = useParams();
@@ -30,9 +33,14 @@ const ProjectPage = () => {
 
   const authInfo = getAuthInfo();
 
+  const [taskState, setTaskState] = useState<FilterOptions>("NO_FILTER");
+
   const { error, data, refetch } = useQuery(GET_PROJECT, {
     variables: {
       id: projectId ?? "",
+      taskFilters: {
+        state: taskState && taskState != "NO_FILTER" ? taskState : undefined,
+      },
     },
   });
 
@@ -57,8 +65,6 @@ const ProjectPage = () => {
       }
     },
   });
-
-  const [taskState, setTaskState] = useState("NO_FILTER");
 
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
   const [isCreateTaskModalVisible, setCreateTaskModalVisible] = useState(false);
@@ -128,18 +134,8 @@ const ProjectPage = () => {
               </div>
 
               <div>
-                {isUpdateModalVisible && (
-                  <UpdateProjectModal
-                    projectId={data.project.id}
-                    defaultName={data.project.name}
-                    defaultDescription={data.project.description}
-                    shouldClose={() => setUpdateModalVisible(false)}
-                    projectUpdated={refetch}
-                  />
-                )}
-
                 {canUpdateOrDeleteProject && (
-                  <div className="flex items-center space-x-8 pt-8">
+                  <div className="flex items-center space-x-8 pt-8 text-black">
                     <div>
                       <button
                         onClick={(e) => {
@@ -180,7 +176,7 @@ const ProjectPage = () => {
                 className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700"
                 value={taskState}
                 onChange={(e) => {
-                  setTaskState(e.target.value);
+                  setTaskState(e.target.value as FilterOptions);
                   refetch();
                 }}
               >
@@ -245,6 +241,16 @@ const ProjectPage = () => {
           )}
         </div>
       </div>
+
+      {isUpdateModalVisible && (
+        <UpdateProjectModal
+          projectId={data.project.id}
+          defaultName={data.project.name}
+          defaultDescription={data.project.description}
+          shouldClose={() => setUpdateModalVisible(false)}
+          projectUpdated={refetch}
+        />
+      )}
 
       {isCreateTaskModalVisible && (
         <CreateTaskModal

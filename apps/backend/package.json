@@ -7,7 +7,12 @@
     "build": "bun build src/index.ts --outdir dist --target bun",
     "lint": "eslint .",
     "format": "prettier . --write",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "seed": "prisma db seed",
+    "migrate": "prisma migrate dev"
+  },
+  "prisma": {
+    "seed": "bun run prisma/seed.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",

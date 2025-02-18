@@ -186,12 +186,14 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
       return comments;
     },
 
-    tasks: async (parent, _args, context) => {
+    tasks: async (parent, args, context) => {
       const tasks = await context.prisma.project
         .findUnique({
           where: { id: parent.id },
         })
-        .tasks();
+        .tasks({
+          where: { state: args.filters?.state ?? undefined },
+        });
 
       if (!tasks) {
         throw new GraphQLError("Une erreur serveur est survenue.", {

@@ -24,7 +24,7 @@ type Project {
   updatedAt: DateTime!
   owner: User!
   comments: [Comment!]!
-  tasks: [Task!]!
+  tasks(filters: TaskFilters): [Task!]!
 }
 
 enum TaskState {
@@ -77,6 +77,10 @@ input ProjectFilters {
   offset: Int
   limit: Int
   search: String
+}
+
+input TaskFilters {
+  state: TaskState
 }
 
 #
