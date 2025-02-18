@@ -18,6 +18,7 @@
           gcc
           stdenv.cc.cc.lib
           openssl
+          watchman
         ];
 
         shellHook = with pkgs; ''

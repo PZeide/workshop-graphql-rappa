@@ -8,8 +8,12 @@ const PROJECT_DELETED_EVENT = "projectDeleted";
 
 const resolvers: Partial<Resolvers<RappaContext>> = {
   Query: {
-    projects: async (_parent, _args, context) => {
-      return await context.prisma.project.findMany();
+    projects: async (_parent, args, context) => {
+      return await context.prisma.project.findMany({
+        skip: args.filters?.offset ?? undefined,
+        take: args.filters?.limit ?? undefined,
+        where: { name: { contains: args.filters?.search ?? undefined } },
+      });
     },
 
     project: async (_parent, args, context) => {

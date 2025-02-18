@@ -34,17 +34,12 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
     },
 
     login: async (_parent, args, context) => {
-      const securityTimeout = new Promise((resolve) =>
-        setTimeout(resolve, 2000)
-      );
-
       const user = await context.prisma.user.findUnique({
         where: { email: args.email },
       });
 
       if (!user) {
-        await securityTimeout;
-        throw new GraphQLError("Invalid credentials", {
+        throw new GraphQLError("Les identifiants sont invalides !", {
           extensions: {
             code: "CLIENT_INVALID_CREDENTIALS",
           },
@@ -53,8 +48,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
 
       const match = await argon2.verify(user.password, args.password);
       if (!match) {
-        await securityTimeout;
-        throw new GraphQLError("Invalid credentials", {
+        throw new GraphQLError("Les identifiants sont invalides !", {
           extensions: {
             code: "CLIENT_INVALID_CREDENTIALS",
           },

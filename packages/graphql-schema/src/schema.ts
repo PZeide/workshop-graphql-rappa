@@ -73,12 +73,18 @@ input CreateCommentInput {
   message: String!
 }
 
+input ProjectFilters {
+  offset: Int
+  limit: Int
+  search: String
+}
+
 #
 # Root types
 #
 
 type Query {
-  projects: [Project!]! @auth(requires: USER)
+  projects(filters: ProjectFilters): [Project!]! @auth(requires: USER)
   project(id: ID!): Project! @auth(requires: USER)
 }
 

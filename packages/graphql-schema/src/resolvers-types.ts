@@ -120,6 +120,12 @@ export type Project = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type ProjectFilters = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   project: Project;
@@ -129,6 +135,11 @@ export type Query = {
 
 export type QueryProjectArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryProjectsArgs = {
+  filters?: InputMaybe<ProjectFilters>;
 };
 
 export type Subscription = {
@@ -284,8 +295,10 @@ export type ResolversTypes = ResolversObject<{
   CreateTaskInput: ResolverTypeWrapper<Partial<CreateTaskInput>>;
   DateTime: ResolverTypeWrapper<Partial<Scalars['DateTime']['output']>>;
   ID: ResolverTypeWrapper<Partial<Scalars['ID']['output']>>;
+  Int: ResolverTypeWrapper<Partial<Scalars['Int']['output']>>;
   Mutation: ResolverTypeWrapper<{}>;
   Project: ResolverTypeWrapper<Partial<Project>>;
+  ProjectFilters: ResolverTypeWrapper<Partial<ProjectFilters>>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
   Subscription: ResolverTypeWrapper<{}>;
@@ -306,8 +319,10 @@ export type ResolversParentTypes = ResolversObject<{
   CreateTaskInput: Partial<CreateTaskInput>;
   DateTime: Partial<Scalars['DateTime']['output']>;
   ID: Partial<Scalars['ID']['output']>;
+  Int: Partial<Scalars['Int']['output']>;
   Mutation: {};
   Project: Partial<Project>;
+  ProjectFilters: Partial<ProjectFilters>;
   Query: {};
   String: Partial<Scalars['String']['output']>;
   Subscription: {};
@@ -362,7 +377,7 @@ export type ProjectResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   project?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<QueryProjectArgs, 'id'>>;
-  projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType>;
+  projects?: Resolver<Array<ResolversTypes['Project']>, ParentType, ContextType, Partial<QueryProjectsArgs>>;
 }>;
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{

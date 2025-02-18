@@ -6,7 +6,6 @@ dev.db
 dev.db-journal
 
 # Local env files
-.env
 .env.local
 .env.development.local
 .env.test.local
