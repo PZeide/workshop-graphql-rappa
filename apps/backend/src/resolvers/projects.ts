@@ -81,6 +81,24 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
         });
       }
 
+      // If user want to change name, check if a project with a similar name already exists
+      if (args.input.name) {
+        const existingProject = await context.prisma.project.findUnique({
+          where: { name: args.input.name },
+        });
+
+        if (existingProject) {
+          throw new GraphQLError(
+            "Un projet avec un nom similaire existe déjà.",
+            {
+              extensions: {
+                code: "CLIENT_PROJECT_ALREADY_EXISTS",
+              },
+            }
+          );
+        }
+      }
+
       const updatedProject = await context.prisma.project.update({
         where: { id: project.id },
         data: {
