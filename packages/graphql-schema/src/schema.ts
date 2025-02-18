@@ -66,16 +66,11 @@ input CreateTaskInput {
 }
 
 input UpdateTaskInput {
-  name: String
   state: TaskState
 }
 
 input CreateCommentInput {
   message: String!
-}
-
-input UpdateCommentInput {
-  message: String
 }
 
 #
@@ -100,7 +95,6 @@ type Mutation {
   deleteTask(id: ID!): Boolean! @auth(requires: USER)
 
   createComment(project: ID!, input: CreateCommentInput!): Comment! @auth(requires: USER)
-  updateComment(id: ID!, input: UpdateCommentInput!): Comment! @auth(requires: USER)
   deleteComment(id: ID!): Boolean! @auth(requires: USER)
 }
 
@@ -114,7 +108,6 @@ type Subscription {
   taskDeleted(project: ID!): ID! @auth(requires: USER)
 
   commentAdded(project: ID!): Comment! @auth(requires: USER)
-  commentUpdated(project: ID!): Comment! @auth(requires: USER)
   commentDeleted(project: ID!): ID! @auth(requires: USER)
 }
 `;

@@ -48,7 +48,6 @@ export type Mutation = {
   deleteTask: Scalars['Boolean']['output'];
   login: Scalars['String']['output'];
   signup: Scalars['String']['output'];
-  updateComment: Comment;
   updateProject: Project;
   updateTask: Task;
 };
@@ -98,12 +97,6 @@ export type MutationSignupArgs = {
 };
 
 
-export type MutationUpdateCommentArgs = {
-  id: Scalars['ID']['input'];
-  input: UpdateCommentInput;
-};
-
-
 export type MutationUpdateProjectArgs = {
   input: UpdateProjectInput;
   project: Scalars['ID']['input'];
@@ -142,7 +135,6 @@ export type Subscription = {
   __typename?: 'Subscription';
   commentAdded: Comment;
   commentDeleted: Scalars['ID']['output'];
-  commentUpdated: Comment;
   projectAdded: Project;
   projectDeleted: Scalars['ID']['output'];
   projectUpdated: Project;
@@ -158,11 +150,6 @@ export type SubscriptionCommentAddedArgs = {
 
 
 export type SubscriptionCommentDeletedArgs = {
-  project: Scalars['ID']['input'];
-};
-
-
-export type SubscriptionCommentUpdatedArgs = {
   project: Scalars['ID']['input'];
 };
 
@@ -195,17 +182,12 @@ export enum TaskState {
   Todo = 'TODO'
 }
 
-export type UpdateCommentInput = {
-  message?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UpdateProjectInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateTaskInput = {
-  name?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<TaskState>;
 };
 
@@ -309,7 +291,6 @@ export type ResolversTypes = ResolversObject<{
   Subscription: ResolverTypeWrapper<{}>;
   Task: ResolverTypeWrapper<Partial<Task>>;
   TaskState: ResolverTypeWrapper<Partial<TaskState>>;
-  UpdateCommentInput: ResolverTypeWrapper<Partial<UpdateCommentInput>>;
   UpdateProjectInput: ResolverTypeWrapper<Partial<UpdateProjectInput>>;
   UpdateTaskInput: ResolverTypeWrapper<Partial<UpdateTaskInput>>;
   User: ResolverTypeWrapper<Partial<User>>;
@@ -331,7 +312,6 @@ export type ResolversParentTypes = ResolversObject<{
   String: Partial<Scalars['String']['output']>;
   Subscription: {};
   Task: Partial<Task>;
-  UpdateCommentInput: Partial<UpdateCommentInput>;
   UpdateProjectInput: Partial<UpdateProjectInput>;
   UpdateTaskInput: Partial<UpdateTaskInput>;
   User: Partial<User>;
@@ -364,7 +344,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTask?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   signup?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'password'>>;
-  updateComment?: Resolver<ResolversTypes['Comment'], ParentType, ContextType, RequireFields<MutationUpdateCommentArgs, 'id' | 'input'>>;
   updateProject?: Resolver<ResolversTypes['Project'], ParentType, ContextType, RequireFields<MutationUpdateProjectArgs, 'input' | 'project'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'id' | 'input'>>;
 }>;
@@ -389,7 +368,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
   commentAdded?: SubscriptionResolver<ResolversTypes['Comment'], "commentAdded", ParentType, ContextType, RequireFields<SubscriptionCommentAddedArgs, 'project'>>;
   commentDeleted?: SubscriptionResolver<ResolversTypes['ID'], "commentDeleted", ParentType, ContextType, RequireFields<SubscriptionCommentDeletedArgs, 'project'>>;
-  commentUpdated?: SubscriptionResolver<ResolversTypes['Comment'], "commentUpdated", ParentType, ContextType, RequireFields<SubscriptionCommentUpdatedArgs, 'project'>>;
   projectAdded?: SubscriptionResolver<ResolversTypes['Project'], "projectAdded", ParentType, ContextType>;
   projectDeleted?: SubscriptionResolver<ResolversTypes['ID'], "projectDeleted", ParentType, ContextType>;
   projectUpdated?: SubscriptionResolver<ResolversTypes['Project'], "projectUpdated", ParentType, ContextType>;

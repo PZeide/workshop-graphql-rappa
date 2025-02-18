@@ -1,8 +1,10 @@
 import { Project, Resolvers } from "@workshop-graphql-rappa/graphql-schema";
 import { GraphQLError } from "graphql";
 import { toGQLUser } from "../utils/mapping";
+import { isAdminOrOwner } from "./utils";
 
 const PROJECT_ADDED_EVENT = "projectAdded";
+const PROJECT_UPDATED_EVENT = "projectUpdated";
 const PROJECT_DELETED_EVENT = "projectDeleted";
 
 const resolvers: Partial<Resolvers<RappaContext>> = {
@@ -57,6 +59,40 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
       return project;
     },
 
+    updateProject: async (_parent, args, context) => {
+      const project = await context.prisma.project.findUnique({
+        where: { id: args.project },
+      });
+
+      if (!project) {
+        throw new GraphQLError("Ce projet n'existe pas.", {
+          extensions: {
+            code: "CLIENT_PROJECT_MISSING",
+          },
+        });
+      }
+
+      // Deny update if user is not admin and it's not his project
+      if (!context.user || !isAdminOrOwner(context.user, project.ownerId)) {
+        throw new GraphQLError("Vous ne pouvez pas faire ça.", {
+          extensions: {
+            code: "CLIENT_FORBIDDEN",
+          },
+        });
+      }
+
+      const updatedProject = await context.prisma.project.update({
+        where: { id: project.id },
+        data: {
+          name: args.input.name ?? undefined,
+          description: args.input.description ?? undefined,
+        },
+      });
+
+      context.pubsub.publish(PROJECT_UPDATED_EVENT, updatedProject);
+      return updatedProject;
+    },
+
     deleteProject: async (_parent, args, context) => {
       const project = await context.prisma.project.findUnique({
         where: { id: args.project },
@@ -71,10 +107,7 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
       }
 
       // Deny deletion if user is not admin and it's not his project
-      if (
-        context.user?.role != "ADMIN" &&
-        context.user?.id != project.ownerId
-      ) {
+      if (!context.user || !isAdminOrOwner(context.user, project.ownerId)) {
         throw new GraphQLError("Vous ne pouvez pas faire ça.", {
           extensions: {
             code: "CLIENT_FORBIDDEN",
@@ -118,6 +151,15 @@ const resolvers: Partial<Resolvers<RappaContext>> = {
     projectAdded: {
       subscribe: (_parent, _args, context) => {
         return context.pubsub.asyncIterableIterator(PROJECT_ADDED_EVENT);
+      },
+      resolve: (payload: Project) => {
+        return payload;
+      },
+    },
+
+    projectUpdated: {
+      subscribe: (_parent, _args, context) => {
+        return context.pubsub.asyncIterableIterator(PROJECT_UPDATED_EVENT);
       },
       resolve: (payload: Project) => {
         return payload;
